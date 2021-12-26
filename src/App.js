@@ -1,4 +1,4 @@
-import {Component, useState} from 'react'
+import {useState} from 'react'
 
 //reglas de los Hooks:
 // ESTAS NO SE PUEDEM DEFINIR EN LOOPS ni en condicionales
@@ -8,31 +8,24 @@ import {Component, useState} from 'react'
 // cuando creemos un custom hook empieza como use<Nombre>
 
 
-//Componentes funcionales vs componentes de clase 
+//creacion de mi primer custom hook  en este caos los customHook nos permiten crear logicas que despues pueden ser reutilizadas por otros componentes 
+//de mi aplicacion
 
-class App extends Component{
-    state ={
-        contador:0
+const useContador = (inicial) =>{
+    const [contador, setContador] = useState(inicial)
+    const incrementar = () =>{
+        setContador(contador + 1 )
     }
-    incrementar = () =>{
-        this.setState ({contador : this.state.contador + 1 })
-    }
-    render(){
-        return(
-            <div>
-                contador: {this.state.contador}<br/>
-                <button onClick={this.incrementar}>Incrementar </button>
-            </div>
-        )
-    }
+
+    return [contador,incrementar]
 }
 
 const App =  () => {
-    const [contador, setContador] = useState(0)
+    const [contador,incrementar] = useContador(0)
     return(
         <div>
             Contador: {contador}<br/>
-            <button onClick={()=> setContador(contador + 1)}> Incrementar </button>
+            <button onClick={incrementar}> Incrementar </button>
         </div>
     )
 }
