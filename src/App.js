@@ -1,146 +1,43 @@
+import { useReducer ,useState } from "react"
 
-import {useState, useEffect, Component} from 'react'
+//tengo que definir el estaod inicial del componente 
+//ver como se mapea y ver como accedo a las propiedades del estado
+// state={contador : 0 }
 
-
-const useContador = (inicial) =>{
-    const [contador, setContador] = useState(inicial)
-    const incrementar = () =>{
-        setContador(contador + 1 )
-    }
-
-    return [contador,incrementar]
-}
-
-// const Interval=(contador) =>{
-//     useEffect(()=>{
-//         const i = setInterval(()=>{console.log(contador)},1000)
-//         return () => clearInterval(i)
-//     },[contador])
-//     return(
-//         <div>
-//             Intervalo 
-//         </div>
-//     )
-// }
+const inicial = {contador:0}
 
 
-class Interval extends Component{
-    intervalo = ""
-    componentDidMount(){
-        this.intervalo = setInterval(()=>{console.log(this.props.contador)},1000)
-    }
-    componentWillUnmount(){
-        clearInterval(this.intervalo)
-    }
-    render(){
-        return(
-            <p>Intervalo</p>
-        )
+// para poder usar UseReducer tengo que generar una funcion que recibe un acumulador y un elemento 
+// retorna el valor del nuevo acumulador
+// action = { type : '<string>', payload : <Dato a eleccion any >  }
+//useReducer se podria usar para acciones condicionales dentro del front  
+const reducer = ( state, action ) => {  
+    //que tipo de accion recibo?
+    switch(action.type){
+        case 'incrementar':
+            return {contador: state.contador + 1 } //nuevo estado 
+        case 'decrementar':
+            return  {contador: state.contador - 1 }   
+        case 'set':
+            return {contador: action.payload}    
+        default: 
+            return state    
     }
 }
 
-const App =  () => {
-    const [contador,incrementar] = useContador(0)
-    useEffect(() =>{
-        document.title = contador
-    },[contador])
+const App = () =>{
+
+    const [state, dispatch ] = useReducer(reducer, inicial)
+    const [valor,setValor] = useState(0)
     return(
         <div>
-            Contador: {contador}<br/>
-            <button onClick={incrementar}> Incrementar </button>
-            {/* <Interval contador={contador}/> */}
+            Contador: {state.contador}<br/>
+            <input value={valor} onChange={(e)=>{setValor(e.target.value)}}/><br/>
+            <button onClick={()=> dispatch({type:'incrementar'}) }>Más</button><br/>
+            <button onClick={()=> dispatch({type:'decrementar'}) }>Menos</button><br/>
+            <button onClick={()=> dispatch({type:'set',payload:valor}) }>SET</button><br/>
         </div>
     )
 }
 
-
-
-
-export default App
-
-
-// import {useState, useEffect} from 'react'
-
-
-// const useContador = (inicial) =>{
-//     const [contador, setContador] = useState(inicial)
-//     const incrementar = () =>{
-//         setContador(contador + 1 )
-//     }
-
-//     return [contador,incrementar]
-// }
-
-// const App =  () => {
-//     const [contador,incrementar] = useContador(0)
-//     //useEffect funcion que recibe la funcion y dependencias del mismo. Si no se ejecutara en cualquier cambio que ocurra 
-//     //sirve para hacer acciones post creacion de componente
-//     //en caso de pasarle por ejemplo un arreglo vacio. Se ejecetura una vez 
-//     //si quiero ejecutarlo cuando cmabie algun variable tengo que pasarlo dentro de ese array 
-//     useEffect(() =>{
-//         document.title = contador
-//     },[contador])
-//     return(
-//         <div>
-//             Contador: {contador}<br/>
-//             <button onClick={incrementar}> Incrementar </button>
-//         </div>
-//     )
-// }
-
-
-
-
-// export default App
-
-
-
-// import {useState, useEffect} from 'react'
-
-
-// const useContador = (inicial) =>{
-//     const [contador, setContador] = useState(inicial)
-//     const incrementar = () =>{
-//         setContador(contador + 1 )
-//     }
-
-//     return [contador,incrementar]
-// }
-
-// const Interval=(contador) =>{
-//     useEffect(()=>{
-//         const i = setInterval(()=>{console.log(contador)},1000)
-//         //desuscribirse al setInterval cuando se cambie el valro de i asi podemos imprimir el nuevo valor de contador
-//         //se ejecuta el clearInterval cada vez que cambie i 
-//         return () => clearInterval(i)
-//     },[contador])
-//     return(
-//         <div>
-//             Intervalo 
-//         </div>
-//     )
-// }
-
-
-// const App =  () => {
-//     const [contador,incrementar] = useContador(0)
-//     //useEffect funcion que recibe la funcion y dependencias del mismo. Si no se ejecutara en cualquier cambio que ocurra 
-//     //sirve para hacer acciones post creacion de componente
-//     //en caso de pasarle por ejemplo un arreglo vacio. Se ejecetura una vez 
-//     //si quiero ejecutarlo cuando cmabie algun variable tengo que pasarlo dentro de ese array 
-//     useEffect(() =>{
-//         document.title = contador
-//     },[contador])
-//     return(
-//         <div>
-//             Contador: {contador}<br/>
-//             <button onClick={incrementar}> Incrementar </button>
-//             {/* <Interval contado={contador}/> */}
-//         </div>
-//     )
-// }
-
-
-
-
-// export default App
+export default App 
