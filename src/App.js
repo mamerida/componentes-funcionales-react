@@ -1,43 +1,30 @@
-import { useReducer ,useState } from "react"
-
-//tengo que definir el estaod inicial del componente 
-//ver como se mapea y ver como accedo a las propiedades del estado
-// state={contador : 0 }
-
-const inicial = {contador:0}
-
-
-// para poder usar UseReducer tengo que generar una funcion que recibe un acumulador y un elemento 
-// retorna el valor del nuevo acumulador
-// action = { type : '<string>', payload : <Dato a eleccion any >  }
-//useReducer se podria usar para acciones condicionales dentro del front  
-const reducer = ( state, action ) => {  
-    //que tipo de accion recibo?
-    switch(action.type){
-        case 'incrementar':
-            return {contador: state.contador + 1 } //nuevo estado 
-        case 'decrementar':
-            return  {contador: state.contador - 1 }   
-        case 'set':
-            return {contador: action.payload}    
-        default: 
-            return state    
-    }
-}
-
+import {useRef} from 'react';
+//useRef nos permite obtener referencias del mismo DOM
 const App = () =>{
-
-    const [state, dispatch ] = useReducer(reducer, inicial)
-    const [valor,setValor] = useState(0)
+    //useRef devuelve un objeto current nulo pero luego de asignar esta propiedad a algun elemento vamos a obtener sus propiedades
+    const ref = useRef()
+    const inputRef = useRef()
+    const click = () =>{
+        //accedo a las propieades del elemento con la propiedad ref
+        //seria como un document.getElementById
+        console.log(ref.current.clientHeight)
+        ref.current.innerHTML ="Chanchito Feliz"
+    }
+    const focus = () => {
+        inputRef.current.focus()
+    }
     return(
+        // <div  onClick ={click} ref={ref}>
+        //     lal
+        // </div>
         <div>
-            Contador: {state.contador}<br/>
-            <input value={valor} onChange={(e)=>{setValor(e.target.value)}}/><br/>
-            <button onClick={()=> dispatch({type:'incrementar'}) }>Más</button><br/>
-            <button onClick={()=> dispatch({type:'decrementar'}) }>Menos</button><br/>
-            <button onClick={()=> dispatch({type:'set',payload:valor}) }>SET</button><br/>
+            {/* para poder usar useRef debo pasar la propiedad dentro del objeto de esta manera tengo acceso a sus propiedades */}
+            <input ref={inputRef}/>
+            <button onClick={focus} > FOCUS</button>
+            <div onClick={click} ref={ref} >LALA</div>
         </div>
     )
 }
 
-export default App 
+
+export default App
